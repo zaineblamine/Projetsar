@@ -23,12 +23,10 @@ public class GameClient {
                   Scanner sc=new Scanner(System.in);
                   String comb=sc.nextLine();
                   System.out.println ("La combinaison est "+comb);
-                  boolean bool=gm.CombinaisonEgale(comb);
-                  System.out.println("res:    "+bool);
-                  Couleur[] tab=gm.stringToTabCol(comb);// c bn
+                  String[] tab=gm.stringToTabCol(comb);
                   gm.comparerCombinaison(tab);
                   HashMap<String,Integer> resultat=gm.getResultat();
-                  System.out.println("Vous avez "+resultat.get("bienPlace")+" couleurs bien placé(s) et "+resultat.get("malPlace")+"mal placé(s)");//ok
+                  System.out.println("Vous avez "+resultat.get("bienPlace")+" couleurs bien placée(s) et "+resultat.get("malPlace")+"mal placeé(s)");//ok
                   coup++;
                   if (resultat.get("bienPlace")==4){
                       found=true;

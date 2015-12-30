@@ -1,11 +1,13 @@
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.StringTokenizer;
 public class GameImp extends UnicastRemoteObject implements Game 
 {
        public static int MAX= 4;
-       private Couleur[] combinaison; 
+       static Random r = new Random();
+       private String[] combinaison; 
        public String combinaisonSecrete;
        HashMap<String,Integer> resultat;
        public GameImp() throws RemoteException
@@ -14,99 +16,89 @@ public class GameImp extends UnicastRemoteObject implements Game
             genererCombinaisonSecrete();
            //System.out.println("kkk"+combinaisonSecrete);
        }
+       public String couleurAleatoire() throws RemoteException{
+		int n = r.nextInt(9);
+		switch (n) {
+		case 0: return "R";
+		case 1: return "J";
+		case 2: return "V";
+		case 3: return "B";
+		case 4: return "O";
+                case 5: return "BL";
+                case 6: return "V";                   
+		default: return "F";
+		}
+	}
        
-    public void genererCombinaisonSecrete() throws RemoteException {
-        combinaison = new Couleur[MAX];
+    public void genererCombinaisonSecrete() throws RemoteException {//done
+        combinaison = new String[MAX];
+        combinaisonSecrete="";
 		System.out.println("Nouvelle combinaison secrete");
 		for (int i = 0 ; i < MAX ; i++) {
-			combinaison[i] = Couleur.couleurAleatoire();
-                         //combinaison[i] = Couleur.B;
+			combinaison[i] = couleurAleatoire();
+                        combinaisonSecrete=combinaisonSecrete+combinaison[i]+" ";
 		}
-                combinaisonSecrete=toString(combinaison);
 		System.out.println(combinaisonSecrete);
     }	
-    public String getCombinaisonSecrete(){
+   /* public String getCombinaisonSecrete(){
         return combinaisonSecrete;
     }
-    
-    public String toString() {
-		return toString(combinaison);
-	}
-	
-	public String toString(Couleur []comb) {
-		String str = "" + comb[0];
-		for (int i = 1 ; i < MAX; i++) {
-			str = str + " " + comb[i];
-		}
-		return str;
-	}
-
-    @Override
     public boolean CombinaisonEgale(String comb) throws RemoteException {//ok
       if (combinaisonSecrete.compareTo(comb)==0)
             return true;
       else
           return false;  
-    }
-    
-    public Couleur[] stringToTabCol(String comb) throws RemoteException{//ok
-        Couleur[] essaiClient = new Couleur[MAX];
-	Couleur[] copieCombinasionCorrecte = combinaison.clone();
+    }*/
+    public String[] stringToTabCol(String comb) throws RemoteException{//done
+        String[] essaiClient = new String[MAX];
+	String[] copieCombinasionCorrecte = combinaison.clone();
         StringTokenizer st = new StringTokenizer(comb);
         int i=0;
         while (st.hasMoreTokens()) {
            String coul=st.nextToken();
-           essaiClient[i]=Couleur.convertirStringACouleur(coul);
+           essaiClient[i]=coul;
            i++;
      }
-        //System.out.println("i="+i);
      return essaiClient;
+     
     }
 
- public void comparerCombinaison(Couleur[] coup) throws RemoteException{//ok
+ public void comparerCombinaison(String[] coup) throws RemoteException{//ok
                 int bienPlace = 0;
                 int malPlace = 0;
                 resultat=new HashMap<String,Integer>();
                 resultat.put("bienPlace",0);
                 resultat.put("malPlace",0);		
-                Couleur[] copieCombinasionCorrecte = combinaison.clone();
-		//System.out.println(toString(copieCombinasionCorrecte));
-		Couleur[] copieCoup = coup.clone();
-		System.out.println(toString(copieCoup));
-		int n = copieCombinasionCorrecte.length;
-		for (int i = 0; i < n; i++) {
-			if (copieCombinasionCorrecte[i] == copieCoup[i]) {
+                String[] copieCombinasionCorrecte = combinaison.clone();
+		String[] copieCoup =coup.clone();
+                System.out.println(copieCombinasionCorrecte[0]);
+                System.out.println(copieCoup[0]);
+				for (int i = 0; i < MAX; i++) {
+			if (copieCombinasionCorrecte[i].compareTo(copieCoup[i])==0) {
 				bienPlace++;
-				copieCombinasionCorrecte[i] = null;
-				copieCoup[i] = null;
+				copieCombinasionCorrecte[i] ="x";
+				copieCoup[i] ="x";
 			}
 		}
-		for ( int i  = 0 ; i < n; i++) {
+		for ( int i  = 0 ; i < MAX; i++) {
 			int j = 0;
 			boolean exist = false;
-			while ( (j < n) && !exist) {
-				exist = ((copieCombinasionCorrecte[i] == copieCoup[j]) && (copieCombinasionCorrecte[i]!=null));
+			while ( (j < MAX) && !exist) {
+				exist = ((copieCombinasionCorrecte[i].compareTo(copieCoup[j])==0) && (copieCombinasionCorrecte[i]!="x"));
 				j++;
 			}
 			if (exist) {
-				copieCombinasionCorrecte[i] = null;
-				copieCoup[j-1] = null;
+				copieCombinasionCorrecte[i] ="x";
+				copieCoup[j-1] ="x";
 				malPlace++;
 			}
 		}
-                System.out.println("on a "+bienPlace+" bienPlace et +"+malPlace+"malPlace");
+                System.out.println("on a "+bienPlace+"couleur(s) bien placée(s) et +"+malPlace+" mal Placée(s)");
                 resultat.put("bienPlace",bienPlace);
                 resultat.put("malPlace",malPlace);
-		/*if (bienPlace == 4) {
-			r.estado = Jeu.GANGNAT;
-		} else {
-			r.estado = Jeu.RESULTAT_PARCIEL;
-		}
-		return r;
-        }*/
               
 } 
-  public HashMap<String,Integer> getResultat(){
+  public HashMap<String,Integer> getResultat()throws RemoteException{
                         return resultat;
             }
 

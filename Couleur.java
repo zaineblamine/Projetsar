@@ -1,9 +1,13 @@
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.*;
+import java.rmi.server.*;
 import java.util.Random;
-public enum Couleur {
+public enum Couleur implements CouleurInterface{
 R,J,V,B,O,BL,VI,F;
 	static Random r = new Random();
 	
-	public static Couleur couleurAleatoire() {
+	public Couleur couleurAleatoire() throws RemoteException{
 		int n = r.nextInt(9);
 		switch (n) {
 		case 0: return R;
@@ -16,7 +20,7 @@ R,J,V,B,O,BL,VI,F;
 		default: return F;
 		}
 	}
-        public static Couleur convertirStringACouleur (String c) {
+        public Couleur convertirStringACouleur (String c) throws RemoteException {
 		switch (c) {
 		case "R": return R;
 		case "J": return J;
