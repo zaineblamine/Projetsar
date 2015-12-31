@@ -15,7 +15,6 @@ public class GameClient {
                 System.out.println("Bienvenue..");
                 gm=(Game) fab.newGame();
                 GameClient c1=new GameClient();
-               // c1.jouerPartie(gm);
                 boolean bool=c1.jouerPartie(gm);
                 boolean continuer=true;
                 if (bool==true){
@@ -47,26 +46,28 @@ public class GameClient {
      }
         public boolean jouerPartie(Game gm) throws RemoteException{
              boolean found=false;
+             boolean erreur=false;
                 int coup=0;
-                while(found==false && coup<10){
+                while(found==false && coup<10 && erreur==false){
                   System.out.println("Donnez une combinaison de couleur ( R-> Rouge , J -> jaune ; V -> vert ; B -> bleu ; O-> orange ; BL -> blanc ; VI -> violet ; F -> fuchsia}");
                   Scanner sc=new Scanner(System.in);
                   String comb=sc.nextLine();
-                  System.out.println ("La combinaison est "+comb);
-                  String[] tab=gm.stringToTabCol(comb);
-                  gm.comparerCombinaison(tab);
-                  HashMap<String,Integer> resultat=gm.getResultat();
-                  System.out.println("Vous avez "+resultat.get("bienPlace")+" couleurs bien placée(s) et "+resultat.get("malPlace")+"mal placeé(s)");//ok
-                  coup++;
-                  if (resultat.get("bienPlace")==4){
-                      found=true;
-                      if (coup==1)
+                  if(!gm.erreurDeSaisie(comb)){
+                     gm.comparerCombinaison(comb);
+                     HashMap<String,Integer> resultat=gm.getResultat();
+                     System.out.println("Vous avez "+resultat.get("bienPlace")+" couleurs bien placée(s) et "+resultat.get("malPlace")+"mal placeé(s)");//ok
+                     coup++;
+                     if (resultat.get("bienPlace")==4){
+                        found=true;
+                          if (coup==1)
                           System.out.println("Félicitation vous avez gagner dès la "+coup+"ére coup");
-                      else
+                         else
                           System.out.println("Félicitation vous avez gagner à la "+coup+"ème coup");
-                  }
-                      
-             }
-                return found;//si reussi found=true pour qu'il puisse le choix de rejouer
-        }
-} 
+                    }           
+                 }
+                  else erreur=true;//sort du boucle ==>fin du jeu
+                }
+                return found;//si reussi found=true pour qu'il puisse le choix de rejouer/ si non reussi ou erreur de saisie
+              }
+}
+

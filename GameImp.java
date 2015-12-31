@@ -7,27 +7,29 @@ import java.util.StringTokenizer;
 public class GameImp extends UnicastRemoteObject implements Game 
 {
        public static int MAX= 4;
+       public static int NBCOL= 8;
        static Random r = new Random();
        private String[] combinaison; 
        public String combinaisonSecrete;
        HashMap<String,Integer> resultat;
+       public String[] couleur={"R","J","V","B","O","BL","VI","F"};
        public GameImp() throws RemoteException
        {
 	    super();
             genererCombinaisonSecrete();
-            
        }
+       
        public String couleurAleatoire() throws RemoteException{
 		int n = r.nextInt(9);
-		switch (n) {
-		case 0: return "R";//rouge
-		case 1: return "J";//jaune
-		case 2: return "V";//vert
-		case 3: return "B";//bleu
-		case 4: return "O";//orange
-                case 5: return "BL";//blanc
-                case 6: return "VI";//violet                  
-		default: return "F";//fichsia
+		switch (n){
+		case 0: return couleur[0];//rouge
+		case 1: return couleur[1];//jaune
+		case 2: return couleur[2];//vert
+		case 3: return couleur[3];//bleu
+		case 4: return couleur[4];//orange
+                case 5: return couleur[5];//blanc
+                case 6: return couleur[6];//violet                  
+		default: return couleur[7];//fichsia
 		}
 	}
        
@@ -41,32 +43,11 @@ public class GameImp extends UnicastRemoteObject implements Game
 		}
 		System.out.println(combinaisonSecrete);
     }	
-   /* public String getCombinaisonSecrete(){
-        return combinaisonSecrete;
-    }
-    public boolean CombinaisonEgale(String comb) throws RemoteException {//ok
-      if (combinaisonSecrete.compareTo(comb)==0)
-            return true;
-      else
-          return false;  
-    }*/
-    public String[] stringToTabCol(String comb) throws RemoteException{//done
-        String[] essaiClient = new String[MAX];
-	String[] copieCombinasionCorrecte = combinaison.clone();
-        StringTokenizer st = new StringTokenizer(comb);
-        int i=0;
-        while (st.hasMoreTokens()) {
-           String coul=st.nextToken();
-           essaiClient[i]=coul;
-           i++;
-     }
-     return essaiClient;
-     
-    }
-
- public void comparerCombinaison(String[] coup) throws RemoteException{//ok
+ public void comparerCombinaison(String comb) throws RemoteException{//ok
                 int bienPlace = 0;
                 int malPlace = 0;
+                String []coup=new String[MAX];
+                coup=comb.split(" ");
                 resultat=new HashMap<String,Integer>();
                 resultat.put("bienPlace",0);
                 resultat.put("malPlace",0);		
@@ -100,4 +81,30 @@ public class GameImp extends UnicastRemoteObject implements Game
   public HashMap<String,Integer> getResultat()throws RemoteException{
                         return resultat;
             }
+  
+  public boolean CouleurExiste(String coul)throws RemoteException {
+      boolean exist=false;
+      int i=0;
+      while(i<NBCOL && exist==false){
+              if (couleur[i].compareTo(coul)==0)
+                  exist=true;
+              else i++;
+      }
+          
+  return exist;
+}
+  public boolean erreurDeSaisie(String combinaison) throws RemoteException{
+      boolean erreur=false;
+      int i=0;
+      String[] coul=combinaison.split(" ");
+      while(i<MAX && erreur==false){
+          if (CouleurExiste(coul[i]))
+              i++;
+          else
+              erreur=true;
+              
+      }
+      if (erreur==true)    System.out.println("Erreur de saisie!!fin du jeu..");
+      return erreur;
+  }
 }
