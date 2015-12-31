@@ -9,13 +9,14 @@ public class GameClient {
 	public static void main (String [] args) {
 
 	     try{
+                Callback cb=new Callback();
                 Registry reg = LocateRegistry.getRegistry("localhost",1099);
 		FabGame fab = (FabGame) reg.lookup("Fabrique");
-                Game gm;
-                System.out.println("Bienvenue..");
+                Game gm ;
                 gm=(Game) fab.newGame();
+                System.out.println("Bienvenue..");
                 GameClient c1=new GameClient();
-                boolean bool=c1.jouerPartie(gm);
+                boolean bool=c1.jouerPartie(gm,cb);
                 boolean continuer=true;
                 if (bool==true){
                     int i=2;
@@ -29,7 +30,7 @@ public class GameClient {
                             
                             System.out.println("\n"+i+"ème partie: Bonne chance!");
                             Game gm2=(Game) fab.newGame();
-                            bool=c1.jouerPartie(gm2);
+                            bool=c1.jouerPartie(gm2,cb);
                             i++;
                         }
                         else {
@@ -44,7 +45,7 @@ public class GameClient {
 		System.out.println (e.toString());
 	     }
      }
-        public boolean jouerPartie(Game gm) throws RemoteException{
+        public boolean jouerPartie(Game gm,ICallback cb) throws RemoteException{
              boolean found=false;
              boolean erreur=false;
                 int coup=0;
@@ -52,7 +53,7 @@ public class GameClient {
                   System.out.println("Donnez une combinaison de couleur ( R-> Rouge , J -> jaune ; V -> vert ; B -> bleu ; O-> orange ; BL -> blanc ; VI -> violet ; F -> fuchsia}");
                   Scanner sc=new Scanner(System.in);
                   String comb=sc.nextLine();
-                  if(!gm.erreurDeSaisie(comb)){
+                  if(!gm.erreurDeSaisie(comb,cb)){
                      gm.comparerCombinaison(comb);
                      HashMap<String,Integer> resultat=gm.getResultat();
                      System.out.println("Vous avez "+resultat.get("bienPlace")+" couleurs bien placée(s) et "+resultat.get("malPlace")+"mal placeé(s)");//ok

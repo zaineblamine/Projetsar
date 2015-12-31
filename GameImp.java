@@ -93,7 +93,7 @@ public class GameImp extends UnicastRemoteObject implements Game
           
   return exist;
 }
-  public boolean erreurDeSaisie(String combinaison) throws RemoteException{
+  public boolean erreurDeSaisie(String combinaison,ICallback cb) throws RemoteException{
       boolean erreur=false;
       int i=0;
       String[] coul=combinaison.split(" ");
@@ -104,7 +104,17 @@ public class GameImp extends UnicastRemoteObject implements Game
               erreur=true;
               
       }
-      if (erreur==true)    System.out.println("Erreur de saisie!!fin du jeu..");
+      if (erreur==true)    {
+          System.out.println("Erreur de saisie!!fin du jeu..");
+          callMeBack("Erreur de saisie!!fin du jeu... tapez ctrl c pour quitter",cb);    
+
+      }
       return erreur;
   }
+  public void callMeBack(String param,ICallback callback)throws RemoteException{
+	Servant servant = new Servant(param,callback);
+	// création du servant
+	servant.start();
+	// démarrage du servant
+	}
 }
