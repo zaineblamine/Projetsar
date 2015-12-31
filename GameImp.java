@@ -1,3 +1,4 @@
+//server
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.HashMap;
@@ -14,19 +15,19 @@ public class GameImp extends UnicastRemoteObject implements Game
        {
 	    super();
             genererCombinaisonSecrete();
-           //System.out.println("kkk"+combinaisonSecrete);
+            
        }
        public String couleurAleatoire() throws RemoteException{
 		int n = r.nextInt(9);
 		switch (n) {
-		case 0: return "R";
-		case 1: return "J";
-		case 2: return "V";
-		case 3: return "B";
-		case 4: return "O";
-                case 5: return "BL";
-                case 6: return "V";                   
-		default: return "F";
+		case 0: return "R";//rouge
+		case 1: return "J";//jaune
+		case 2: return "V";//vert
+		case 3: return "B";//bleu
+		case 4: return "O";//orange
+                case 5: return "BL";//blanc
+                case 6: return "VI";//violet                  
+		default: return "F";//fichsia
 		}
 	}
        
@@ -71,8 +72,6 @@ public class GameImp extends UnicastRemoteObject implements Game
                 resultat.put("malPlace",0);		
                 String[] copieCombinasionCorrecte = combinaison.clone();
 		String[] copieCoup =coup.clone();
-                System.out.println(copieCombinasionCorrecte[0]);
-                System.out.println(copieCoup[0]);
 				for (int i = 0; i < MAX; i++) {
 			if (copieCombinasionCorrecte[i].compareTo(copieCoup[i])==0) {
 				bienPlace++;
@@ -93,7 +92,7 @@ public class GameImp extends UnicastRemoteObject implements Game
 				malPlace++;
 			}
 		}
-                System.out.println("on a "+bienPlace+"couleur(s) bien placée(s) et +"+malPlace+" mal Placée(s)");
+                System.out.println("On a "+bienPlace+" couleur(s) bien placée(s) et +"+malPlace+" mal Placée(s)");
                 resultat.put("bienPlace",bienPlace);
                 resultat.put("malPlace",malPlace);
               
@@ -101,6 +100,4 @@ public class GameImp extends UnicastRemoteObject implements Game
   public HashMap<String,Integer> getResultat()throws RemoteException{
                         return resultat;
             }
-
-  
 }
