@@ -10,5 +10,6 @@ public interface Game extends Remote{
         public boolean CouleurExiste(String coul)throws RemoteException;
         public boolean erreurDeSaisie(String combinaison,ICallback cb) throws RemoteException;
         public void callMeBack(String param,ICallback callback) throws RemoteException;
+        public boolean jouerCoup(ICallback cb,String comb) throws RemoteException;
 
 }

@@ -4,8 +4,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Scanner;
-public class GameClient  extends Thread  {
-    public static void main (String [] args){
+public class GameClient2 {
+    public static void main (String [] args) {
 
 	     try{
                 Callback cb=new Callback();
@@ -16,7 +16,7 @@ public class GameClient  extends Thread  {
                 System.out.println("Bienvenue..");
                 GameClient c1=new GameClient();
                 boolean bool=c1.jouerPartie(gm,cb);
-               boolean continuer=true;
+                boolean continuer=true;
                 if (bool==true){
                     int i=2;
                     while (bool==true && continuer==true){
@@ -45,23 +45,15 @@ public class GameClient  extends Thread  {
                }
     }
              
-      public boolean jouerPartie(Game gm, ICallback cb) throws RemoteException, InterruptedException{
+      public boolean jouerPartie(Game gm, ICallback cb) throws RemoteException{
              boolean found=false;
                 int coup=0;
-                boolean erreur=false;
-                while(coup<10 && found==false && erreur==false){
-                  coup++;
+                while(coup<10 && found==false){
                   System.out.println("Donnez une combinaison de couleur ( R-> Rouge , J -> jaune ; V -> vert ; B -> bleu ; O-> orange ; BL -> blanc ; VI -> violet ; F -> fuchsia}");
                   Scanner sc=new Scanner(System.in);
                   String comb=sc.nextLine();
-                  if(gm.erreurDeSaisie(comb,cb)){//message de la part du serveur va etre affiché
-                      erreur=true;
-                  }
-                  //else
-                  else{
                   found=gm.jouerCoup(cb, comb);
-                  Thread.sleep((long) 50.0);//pour le message du Callback s'affiche avant
-                  }
+                  coup++;
                 }
                 return found;//si reussi found=true pour qu'il puisse le choix de rejouer/ si non reussi ou erreur de saisie
               }

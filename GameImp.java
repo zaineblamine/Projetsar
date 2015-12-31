@@ -3,6 +3,7 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 public class GameImp extends UnicastRemoteObject implements Game 
 {
@@ -100,14 +101,12 @@ public class GameImp extends UnicastRemoteObject implements Game
       while(i<MAX && erreur==false){
           if (CouleurExiste(coul[i]))
               i++;
-          else
+          else{
               erreur=true;
+              System.out.println("Erreur de saisie!!fin du jeu..");
+              callMeBack("Erreur de saisie!!fin du jeu... tapez CTRL c pour quitter",cb); 
+          }
               
-      }
-      if (erreur==true)    {
-          System.out.println("Erreur de saisie!!fin du jeu..");
-          callMeBack("Erreur de saisie!!fin du jeu... tapez ctrl c pour quitter",cb);    
-
       }
       return erreur;
   }
@@ -117,4 +116,21 @@ public class GameImp extends UnicastRemoteObject implements Game
 	servant.start();
 	// démarrage du servant
 	}
+       public boolean jouerCoup(ICallback cb,String comb) throws RemoteException{
+             boolean gagne=false;
+             //boolean erreur=erreurDeSaisie(comb,cb);
+             int coup=0;
+                 if(!erreurDeSaisie(comb,cb)){                        
+                      comparerCombinaison(comb);
+                        HashMap<String,Integer> resultat=getResultat();
+                        String res0="Vous avez "+resultat.get("bienPlace")+" couleurs bien placée(s) et "+resultat.get("malPlace")+" mal placeé(s)";
+                        callMeBack(res0,cb);
+                        if (resultat.get("bienPlace")==4){
+                              gagne=true;
+                              String res1="Félicitation! Vous avez gagner";                             
+                              callMeBack(res1,cb);
+                        }
+                 }          
+              return gagne;//si reussi found=true pour qu'il puisse le choix de rejouer
+              }
 }
