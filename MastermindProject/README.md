@@ -1,10 +1,10 @@
-#ce projet est réalisé par Lamine zaineb
-#IF4 groupe B02
-#Année Universitaire 2015-2016
-#version du jdk utilisé 1.8.0_65
+####ce projet est réalisé par Lamine zaineb
+####IF4 groupe B02
+####Année Universitaire 2015-2016
+####version du jdk utilisé 1.8.0_65
 
 
-#compilation du projet
+###compilation du projet
 cd Mastermind/client
 javac ICallback.java
 javac Callback.java
@@ -40,7 +40,7 @@ Déplacer manuellement ou en utilisant la commande « mv » tous les fichiers du
 dossier « client » au dossier «www » sauf les fichiers suivants :
 - DynamicGameClient.java, DynamicGameClient.class, Client.policy
 
-#execution du projet
+###execution du projet
 cd ../server
 java -Djava.security.policy=server.policy -Djava.rmi.server.codebase=file:///home/zaineb/Desktop/Mastermind/www/ DynamicGameServer
 
